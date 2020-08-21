@@ -12,8 +12,10 @@ commands:
         description: lint target path
         type: string
     steps:
-      - run: |
-          # https://golangci-lint.run/usage/install/#ci-installation
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-          | sh -s <<parameters.version>> \
-          golangci-lint run <<parameters.target>>
+      - run:
+          name: run golangci-lint
+          command: |
+            # https://golangci-lint.run/usage/install/#ci-installation
+            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
+            | sh -s <<parameters.version>> \
+            golangci-lint run <<parameters.target>>
