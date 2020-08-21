@@ -1,0 +1,44 @@
+version: 2.1
+
+executors:
+  go:
+    docker:
+      - image: golang:latest
+
+commands:
+  install-linter:
+    parameters:
+      version:
+        default: v1.30.0
+        description: golangci-lint version
+        type: string
+    steps:
+      - run: |
+          # https://golangci-lint.run/usage/install/#ci-installation
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
+          | sh -s <<parameters.version>>
+
+  exec-lint:
+    parameters:
+      target:
+        default: ./...
+        description: lint target path
+        type: string
+    steps:
+      - run: |
+          golangci-lint run <<parameters.target>>
+
+jobs:
+  exec:
+    executor: go
+    steps:
+      - install-linter
+      - exec-lint
+  install:
+    executor: go
+    steps:
+      - install-linter
+  exec-only:
+    executor: go
+    steps:
+      - exec-lint
